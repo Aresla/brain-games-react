@@ -1,26 +1,46 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {GameSelector} from "./components/GameSelector/GameSelector";
+import {WelcomeMessage} from "./components/WelcomeMessage/WelcomeMessage";
+import {welcomeMessage} from "./constants/constants";
+import {PrimeGame} from "./components/PrimeGame/PrimeGame";
+import {CalcGame} from "./components/CalcGame/CalcGame";
+import {EvenGame} from "./components/EvenGame/EvenGame";
+import {ProgressionGame} from "./components/ProgressionGame/ProgressionGame";
+import {GcdGame} from "./components/GcdGame/GcdGame";
+import { Layout } from 'antd';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const gameMap = {
+  Prime: <PrimeGame/>,
+  Even: <EvenGame/>,
+  Calc: <CalcGame/>,
+  Progression: <ProgressionGame/>,
+  Gcd: <GcdGame/>,
+};
+
+export class App extends React.Component {
+  state = {
+    gameList: ['Calc', 'Prime', 'Even', 'Progression', 'Gcd'],
+    activeGame: 'Calc',
+  };
+  handleGameSelect = (e) => {
+    this.setState({
+      activeGame: e.target.value,
+    })
+  };
+
+  render(){
+    const { gameList, activeGame } = this.state;
+    return (
+        <div className="App">
+          <header className="App-header">
+            <WelcomeMessage message ={welcomeMessage}/>
+            <br />
+            <GameSelector onGameSelect={this.handleGameSelect} gameList={gameList}/>
+            {gameMap[activeGame]}
+          </header>
+        </div>
+    );
+  }
 }
 
-export default App;
