@@ -1,41 +1,30 @@
 import React from "react";
-import {Typography, Input, Button} from 'antd';
-import {generateTaskCalc} from "../../helpers/generateTaskCalc";
+import {Button, Typography} from 'antd';
 import { UndoOutlined, ArrowRightOutlined } from '@ant-design/icons';
 
-export class CalcGame extends React.Component {
+
+export class GameYesNo extends React.Component {
     state = {
         isAnswered: false,
         isCorrect: null,
         question: '',
         rightAnswer: null,
-        isWrongFormat: false,
     };
 
     componentDidMount() {
-        const task = generateTaskCalc();
+        const task = this.props.taskGenerator();
         this.setState({
             rightAnswer: task.rightAnswer,
             question: task.question,
         })
     }
 
-    handlePressEnter = (e) => {
+    handleButtonClick = (e, answer) => {
         e.preventDefault();
-        const inputValue = e.target.value;
-        const parsed = parseInt(inputValue, 10);
-        const isNumber = !isNaN(parsed);
-        if (isNumber) {
-            this.setState({
-                isAnswered: true,
-                isCorrect: inputValue === this.state.rightAnswer,
-                isWrongFormat: false,
-            });
-        } else {
-            this.setState({
-                isWrongFormat: true,
-            })
-        }
+        this.setState({
+            isAnswered: true,
+            isCorrect: answer === this.state.rightAnswer,
+        });
     };
 
     handleGameRepeat = (e) => {
@@ -48,7 +37,7 @@ export class CalcGame extends React.Component {
 
     handleGameRestart = (e) => {
         e.preventDefault();
-        const task = generateTaskCalc();
+        const task = this.props.taskGenerator();
         this.setState({
             isAnswered: false,
             isCorrect: null,
@@ -58,20 +47,20 @@ export class CalcGame extends React.Component {
     };
 
     render(){
-        const { isAnswered, isCorrect, question, isWrongFormat } = this.state;
+        const { isAnswered, isCorrect, question } = this.state;
+        const { gameDescription } = this.props;
         return (
             <>
                 <br />
                 <br />
-                <Typography.Title level={3}>What is the result of the expression?</Typography.Title>
+                <Typography.Title level={3}>{gameDescription}</Typography.Title>
                 {!isAnswered && (
                     <>
-                        <br />
                         <Typography.Title level={2}>{question}</Typography.Title>
+                        <br />
                         <div>
-                            <br />
-                            <Input onPressEnter={(e) => this.handlePressEnter(e)} size="large" placeholder="Input here" />
-                            {isWrongFormat && <Typography.Title>wrong format</Typography.Title>}
+                            <Button type="primary" size='large' shape="round" onClick={(e) => this.handleButtonClick(e, true)}>YES</Button>
+                            <Button type="primary" size='large' shape="round" onClick={(e) => this.handleButtonClick(e, false)}>NO</Button>
                         </div>
                     </>
 
@@ -93,3 +82,4 @@ export class CalcGame extends React.Component {
         );
     };
 }
+

@@ -1,9 +1,8 @@
 import React from "react";
 import {Typography, Input, Button} from 'antd';
-import {generateTaskProgression} from "../../helpers/generateTaskProgression";
 import { UndoOutlined, ArrowRightOutlined } from '@ant-design/icons';
 
-export class ProgressionGame extends React.Component {
+export class GameWithInput extends React.Component {
     state = {
         isAnswered: false,
         isCorrect: null,
@@ -13,7 +12,7 @@ export class ProgressionGame extends React.Component {
     };
 
     componentDidMount() {
-        const task = generateTaskProgression();
+        const task = this.props.taskGenerator();
         this.setState({
             rightAnswer: task.rightAnswer,
             question: task.question,
@@ -48,7 +47,7 @@ export class ProgressionGame extends React.Component {
 
     handleGameRestart = (e) => {
         e.preventDefault();
-        const task = generateTaskProgression();
+        const task = this.props.taskGenerator();
         this.setState({
             isAnswered: false,
             isCorrect: null,
@@ -59,11 +58,12 @@ export class ProgressionGame extends React.Component {
 
     render(){
         const { isAnswered, isCorrect, question, isWrongFormat } = this.state;
+        const { gameDescription } = this.props;
         return (
             <>
                 <br />
                 <br />
-                <Typography.Title level={3}>What number is missing in the progression?</Typography.Title>
+                <Typography.Title level={3}>{gameDescription}</Typography.Title>
                 {!isAnswered && (
                     <>
                         <br />
